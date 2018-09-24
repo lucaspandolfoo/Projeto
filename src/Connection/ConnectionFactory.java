@@ -28,7 +28,7 @@ public class ConnectionFactory {
     
     public static Connection con;
     public static Statement stmt;
-    
+       
     public static void abreConexao() {
          try {
             Connection con = getConnection();

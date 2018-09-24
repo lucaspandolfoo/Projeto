@@ -40,18 +40,20 @@ public class AlunosView extends javax.swing.JFrame {
         
         this.getContentPane().setBackground(Color.WHITE);
 
-        //carregar os cursos existentes
-        //carregar os alunos existentes
-        //carregar a quantidade de alunos
         
         try{
             
-            Formatacao.colocaMascara(txtData, "##/##/####");
+            //carregar os alunos existentes
             atualizarTabela();
+            
+            //carregar a quantidade de alunos
             atualizarQtdeAlunos();
             
+            //carregar os cursos existentes
             cbCurso = new Combos(jcbCursos);
             cbCurso.PreencheCombo("SELECT cod_curso, nom_curso FROM cursos ORDER BY nom_curso");
+            
+            limparTela();
                
         }catch(Exception ex){
             CaixaDeDialogo.obterinstancia().exibirMensagem("ERRO:" + ex.getMessage());
@@ -457,17 +459,24 @@ public class AlunosView extends javax.swing.JFrame {
      private void limparTela() {
          try{
           //LIMPAR OS CAMPOS DA TELA
-          //LIBERAR O CAMPO MATRICULA
-                  
+          
           txtMatricula.setText("");
           txtNome.setText("");
           txtEmail.setText("");
-          jcbCursos.setSelectedIndex(0);
           txtData.setText("");
-          Formatacao.colocaMascara(txtData, "##/##/####");
+          cbCurso.SetaComboBox("");
+          
+          //LIBERAR O CAMPO MATRICULA
           txtMatricula.setEditable(true);
+          
+          //DESELECIONAR LINHA DA TABELA
           jtbAlunos.getSelectionModel().clearSelection();
+          
+          //COLOCAR FOCO NO CAMPO MATRÍCULA
           txtMatricula.grabFocus();
+          
+          //Formata o campo data de nascimento
+          Formatacao.colocaMascara(txtData, "##/##/####");
           
         }catch(Exception ex){
             CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage());
@@ -495,14 +504,18 @@ public class AlunosView extends javax.swing.JFrame {
         }
     }
     
-      private void guardarDados(){
-         objAluno.setMat_aluno(Integer.parseInt(txtMatricula.getText()));
+      private void guardarDados(){     
+        objAluno.setMat_aluno(Integer.parseInt(txtMatricula.getText()));
         objAluno.setNom_aluno(txtNome.getText());
         objAluno.setEmail(txtEmail.getText());
-        objAluno.setDat_nasc(Global.converterData(wData, "dd/MM/yyyy", "yyyy-MM-dd"));
+        
+        //AJUSTA A DATA PARA ANO-MES-DIA
+        String dataFormatada = Formatacao.ajustaDataAMD(txtData.getText());
+        objAluno.setDat_nasc(dataFormatada);
+        
        Combos c = new Combos();
        c = (Combos) jcbCursos.getSelectedItem();
-        objAluno.setCod_curso(Integer.parseInt(c.getCodigo()));   
+       objAluno.setCod_curso(Integer.parseInt(c.getCodigo()));   
     }
      
       private void preencheCampos(){
@@ -511,8 +524,11 @@ public class AlunosView extends javax.swing.JFrame {
             txtMatricula.setText(String.valueOf(objAluno.getMat_aluno()));
             txtNome.setText(objAluno.getNom_aluno());
             txtEmail.setText(objAluno.getEmail());
-            txtData.setText(Global.converterData(objAluno.getDat_nasc(), "yyyy-MM-dd", "dd/MM/yyyy"));
-            cbCurso.SetaComboBox(String.valueOf(objAluno.getCod_curso()));     
+            cbCurso.SetaComboBox(String.valueOf(objAluno.getCod_curso()));  
+            
+            //Ajusta a data para DIA/MES/ANO
+            String dataFormatada = Formatacao.ajustaDataDMA(objAluno.getDat_nasc());
+            txtData.setText(dataFormatada);
             
         }catch(Exception ex){
             CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage());

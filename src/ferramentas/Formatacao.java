@@ -135,7 +135,7 @@ public class Formatacao {
         }
     }
 
-    public static String ajustaDataHoraDMA(String data) {
+    /*public static String ajustaDataHoraDMA(String data) {
         String dataFormatada = null;
         try {
             Date dataAMD = new SimpleDateFormat("yyyy-MM-dd hh:mm").parse(data);
@@ -151,6 +151,28 @@ public class Formatacao {
         try {
             Date dataDMA = new SimpleDateFormat("dd/MM/yyyy hh:mm").parse(data);
             dataFormatada = new SimpleDateFormat("yyyy-MM-dd hh:mm").format(dataDMA);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return (dataFormatada);
+    }*/
+    
+        public static String ajustaDataDMA(String data) {
+        String dataFormatada = null;
+        try {
+            Date dataAMD = new SimpleDateFormat("yyyy-MM-dd").parse(data);
+            dataFormatada = new SimpleDateFormat("dd/MM/yyyy").format(dataAMD);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return (dataFormatada);
+    }
+
+    public static String ajustaDataAMD(String data) {
+        String dataFormatada = null;
+        try {
+            Date dataDMA = new SimpleDateFormat("dd/MM/yyyy").parse(data);
+            dataFormatada = new SimpleDateFormat("yyyy-MM-dd").format(dataDMA);
         } catch (Exception e) {
             System.err.println(e);
         }
