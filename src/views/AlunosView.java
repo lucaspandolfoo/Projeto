@@ -33,13 +33,12 @@ public class AlunosView extends javax.swing.JFrame {
     
     Combos cbCurso;
     Aluno objAluno;
-    String wData;
+  
     
     public AlunosView() {
         initComponents();
         
         this.getContentPane().setBackground(Color.WHITE);
-
         
         try{
             
@@ -286,6 +285,8 @@ public class AlunosView extends javax.swing.JFrame {
 
     private void jtbAlunosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbAlunosMouseClicked
         // TODO add your handling code here:
+        try {
+             
          //pega a linha selecionada
         int linhaSelecionada = jtbAlunos.getSelectedRow();
         // Primeira coluna da linha
@@ -296,6 +297,10 @@ public class AlunosView extends javax.swing.JFrame {
         objAluno = objAlunoCon.buscar(coluna1);
         
         preencheCampos();
+        
+       } catch (Exception ex) {
+            CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage());
+        }
     }//GEN-LAST:event_jtbAlunosMouseClicked
 
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
@@ -326,7 +331,9 @@ public class AlunosView extends javax.swing.JFrame {
 
     private void jtbAlunosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtbAlunosKeyReleased
         // TODO add your handling code here:
-          //pega a linha selecionada
+        try {
+            
+        //pega a linha selecionada
         int linhaSelecionada = jtbAlunos.getSelectedRow();
         // Primeira coluna da linha
         String coluna1 = jtbAlunos.getModel().getValueAt(linhaSelecionada, 0).toString();
@@ -336,6 +343,10 @@ public class AlunosView extends javax.swing.JFrame {
         objAluno = objAlunoCon.buscar(coluna1);
         
         preencheCampos();
+        
+       } catch (Exception ex) {
+            CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage());
+        }
         
     }//GEN-LAST:event_jtbAlunosKeyReleased
 
@@ -365,8 +376,10 @@ public class AlunosView extends javax.swing.JFrame {
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         // TODO add your handling code here:
         if (validarLinha() == true) {
-        boolean resposta = CaixaDeDialogo.obterinstancia().pedirConfirmacao("Você realmente deseja remover este aluno?","Remover", 'p');
+            
+            boolean resposta = CaixaDeDialogo.obterinstancia().pedirConfirmacao("Você realmente deseja remover este aluno?","Remover", 'p');
             if (resposta == true) {
+                
                  String matricula = txtMatricula.getText();
                  AlunoController objAlunoCon = new AlunoController(null, null);
                  try {
@@ -396,45 +409,10 @@ public class AlunosView extends javax.swing.JFrame {
         limparTela();
     }//GEN-LAST:event_btnLimparTelaActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AlunosView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AlunosView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AlunosView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AlunosView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AlunosView().setVisible(true);
-            }
-        });
-    }
-    
-    private boolean validarDados(){
+        private boolean validarDados(){
         try {
             
-           wData = txtData.getText().toString(); 
+           String wData = txtData.getText().toString(); 
            
            if (
            (!txtMatricula.getText().trim().equals("")) && 
@@ -475,8 +453,10 @@ public class AlunosView extends javax.swing.JFrame {
           //COLOCAR FOCO NO CAMPO MATRÍCULA
           txtMatricula.grabFocus();
           
-          //Formata o campo data de nascimento
+          //FORMATA O CAMPO DATA DE NASCIMENTO
           Formatacao.colocaMascara(txtData, "##/##/####");
+          
+          atualizarTabela();
           
         }catch(Exception ex){
             CaixaDeDialogo.obterinstancia().exibirMensagem("Erro: " + ex.getMessage());
@@ -504,7 +484,8 @@ public class AlunosView extends javax.swing.JFrame {
         }
     }
     
-      private void guardarDados(){     
+      private void guardarDados(){    
+        try {
         objAluno.setMat_aluno(Integer.parseInt(txtMatricula.getText()));
         objAluno.setNom_aluno(txtNome.getText());
         objAluno.setEmail(txtEmail.getText());
@@ -513,9 +494,14 @@ public class AlunosView extends javax.swing.JFrame {
         String dataFormatada = Formatacao.ajustaDataAMD(txtData.getText());
         objAluno.setDat_nasc(dataFormatada);
         
-       Combos c = new Combos();
-       c = (Combos) jcbCursos.getSelectedItem();
-       objAluno.setCod_curso(Integer.parseInt(c.getCodigo()));   
+        //RECUPERANDO O CODIGO DO CURSO DO JCOMBOBOX
+        Combos c = (Combos) jcbCursos.getSelectedItem();
+        String codigoCurso = c.getCodigo();
+        objAluno.setCod_curso(Integer.parseInt(codigoCurso));
+        
+       }catch(Exception ex){
+            CaixaDeDialogo.obterinstancia().exibirMensagem("Problemas no guardaDados: " + ex.getMessage());
+        }
     }
      
       private void preencheCampos(){
@@ -526,7 +512,7 @@ public class AlunosView extends javax.swing.JFrame {
             txtEmail.setText(objAluno.getEmail());
             cbCurso.SetaComboBox(String.valueOf(objAluno.getCod_curso()));  
             
-            //Ajusta a data para DIA/MES/ANO
+            //AJUSTA A DATA PARA DIA/MES/ANO
             String dataFormatada = Formatacao.ajustaDataDMA(objAluno.getDat_nasc());
             txtData.setText(dataFormatada);
             
@@ -547,7 +533,52 @@ public class AlunosView extends javax.swing.JFrame {
       }
       return true;
   }
+      
+       private void jcbCursoItemStateChanged(java.awt.event.ItemEvent evt) {                                          
+        try{
+            Combos c = (Combos) jcbCursos.getSelectedItem();
+            String codigoCurso = c.getCodigo();
+            
+        }catch(Exception ex){
+            
+        }
+ }
+        
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(AlunosView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(AlunosView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(AlunosView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AlunosView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
 
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AlunosView().setVisible(true);
+            }
+        });
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAlterar;
     private javax.swing.JButton btnExcluir;

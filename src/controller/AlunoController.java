@@ -18,7 +18,7 @@ import Connection.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -90,7 +90,7 @@ public class AlunoController {
             stmt.setInt(2, objAluno.getCod_curso());
             stmt.setString(3, objAluno.getNom_aluno());
             stmt.setString(4, objAluno.getEmail());
-            stmt.setDate(5, java.sql.Date.valueOf(objAluno.getDat_nasc()));
+            stmt.setDate(5, Date.valueOf(objAluno.getDat_nasc()));
             
             stmt.executeUpdate();
             
@@ -115,7 +115,7 @@ public class AlunoController {
             stmt.setString(1, objAluno.getNom_aluno());
             stmt.setInt(2, objAluno.getCod_curso());
             stmt.setString(3, objAluno.getEmail());
-            stmt.setDate(4, java.sql.Date.valueOf(objAluno.getDat_nasc()));
+            stmt.setDate(4, Date.valueOf(objAluno.getDat_nasc()));
             stmt.setInt(5, objAluno.getMat_aluno());
            
             stmt.executeUpdate();
